@@ -1,0 +1,83 @@
+<% content_for :page_title, "Dashboard" %>
+
+<!-- Welcome Section -->
+<div class="mb-8">
+  <div class="bg-gradient-to-r from-indigo-900 to-slate-900 rounded-2xl p-8 text-white relative overflow-hidden border border-slate-800 shadow-xl shadow-slate-900/10">
+    <div class="relative z-10 max-w-2xl">
+      <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-400/20 text-indigo-300 font-medium text-xs mb-4">
+        <span class="w-1.5 h-1.5 rounded-full bg-indigo-400"></span>
+        Infrastructure Prepped (Phase 0)
+      </div>
+      <h2 class="text-3xl font-extrabold tracking-tight mb-2">Welcome to AI Workspace</h2>
+      <p class="text-slate-350 leading-relaxed text-sm">
+        This portal acts as your control center for future AI utilities. The foundation is configured with Ruby on Rails 8, Tailwind CSS, PostgreSQL, and Hotwire.
+      </p>
+    </div>
+    <!-- Decorative background elements -->
+    <div class="absolute right-0 bottom-0 opacity-10 blur-2xl w-64 h-64 bg-indigo-500 rounded-full translate-x-12 translate-y-12"></div>
+    <div class="absolute right-24 top-0 opacity-15 blur-3xl w-48 h-48 bg-purple-500 rounded-full -translate-y-8"></div>
+  </div>
+</div>
+
+<!-- Tools Grid -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+  <!-- AI Chat Card -->
+  <div class="bg-white rounded-xl border border-slate-200 p-6 flex flex-col justify-between hover:border-indigo-300 hover:shadow-md transition-all">
+    <div>
+      <div class="w-10 h-10 rounded-lg bg-indigo-50 flex items-center justify-center text-indigo-600 mb-4 font-bold text-lg">
+        💬
+      </div>
+      <h3 class="text-lg font-bold text-slate-850 mb-1">AI Chat</h3>
+      <p class="text-slate-500 text-sm leading-relaxed">
+        Interactive chat helper leveraging OpenAI's language models. Stream responses dynamically.
+      </p>
+    </div>
+    <div class="mt-6 flex items-center justify-between text-xs">
+      <span class="text-emerald-600 font-medium">Status: Active</span>
+      <a href="<%= conversations_path %>" class="text-indigo-600 hover:text-indigo-800 font-semibold group flex items-center gap-1">
+        Open Chat
+        <span class="transition-transform group-hover:translate-x-0.5">&rarr;</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- Email Generator Card -->
+  <div class="bg-white rounded-xl border border-slate-200 p-6 flex flex-col justify-between hover:border-indigo-300 hover:shadow-md transition-all">
+    <div>
+      <div class="w-10 h-10 rounded-lg bg-purple-50 flex items-center justify-center text-purple-600 mb-4 font-bold text-lg">
+        ✉️
+      </div>
+      <h3 class="text-lg font-bold text-slate-850 mb-1">Email Generator</h3>
+      <p class="text-slate-500 text-sm leading-relaxed">
+        Draft outbound sequences, responder copy, or general mail content based on prompt contexts.
+      </p>
+    </div>
+    <div class="mt-6 flex items-center justify-between text-xs">
+      <span class="text-slate-400 font-medium">Status: Coming Soon</span>
+      <a href="<%= email_generator_path %>" class="text-indigo-600 hover:text-indigo-800 font-semibold group flex items-center gap-1">
+        Configure
+        <span class="transition-transform group-hover:translate-x-0.5">&rarr;</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- Summarizer Card -->
+  <div class="bg-white rounded-xl border border-slate-200 p-6 flex flex-col justify-between hover:border-indigo-300 hover:shadow-md transition-all">
+    <div>
+      <div class="w-10 h-10 rounded-lg bg-pink-50 flex items-center justify-center text-pink-600 mb-4 font-bold text-lg">
+        📄
+      </div>
+      <h3 class="text-lg font-bold text-slate-850 mb-1">AI Summarizer</h3>
+      <p class="text-slate-500 text-sm leading-relaxed">
+        Consolidate long-form documents, briefs, or meeting outputs to bullet highlights in seconds.
+      </p>
+    </div>
+    <div class="mt-6 flex items-center justify-between text-xs">
+      <span class="text-slate-400 font-medium">Status: Coming Soon</span>
+      <a href="<%= summarizer_path %>" class="text-indigo-600 hover:text-indigo-800 font-semibold group flex items-center gap-1">
+        Configure
+        <span class="transition-transform group-hover:translate-x-0.5">&rarr;</span>
+      </a>
+    </div>
+  </div>
+</div>

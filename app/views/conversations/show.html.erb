@@ -1,0 +1,16 @@
+<% content_for :page_title, @conversation.title %>
+
+<div class="flex h-full -m-8">
+  <%= render "sidebar", conversations: @conversations %>
+
+  <div class="flex-1 flex flex-col"
+       data-controller="streaming"
+       data-streaming-regenerate-url-value="<%= regenerate_conversation_messages_path(@conversation) %>">
+    <div class="flex-1 overflow-y-auto px-6 py-4" data-streaming-target="messages" data-controller="chat">
+      <%= render partial: "conversations/message", collection: @messages %>
+    </div>
+    <div class="border-t border-slate-200 bg-white px-6 py-4">
+      <%= render "message_form", conversation: @conversation, message: @message %>
+    </div>
+  </div>
+</div>

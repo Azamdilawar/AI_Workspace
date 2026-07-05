@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= content_for(:title) || "Ai Workspace" %></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= yield :head %>
+
+    <%# Enable PWA manifest for installable apps (make sure to enable in config/routes.rb too!) %>
+    <%#= tag.link rel: "manifest", href: pwa_manifest_path(format: :json) %>
+
+    <link rel="icon" href="/icon.png" type="image/png">
+    <link rel="icon" href="/icon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="/icon.png">
+
+    <%# Includes all stylesheet files in app/assets/stylesheets %>
+    <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+      body {
+        font-family: 'Inter', sans-serif;
+      }
+    </style>
+  </head>
+
+  <body class="bg-slate-50 text-slate-900 flex h-screen overflow-hidden">
+    <!-- Sidebar Navigation -->
+    <aside class="w-64 bg-slate-900 text-slate-300 flex flex-col justify-between border-r border-slate-800 shrink-0">
+      <div>
+        <!-- Logo Header -->
+        <div class="h-16 flex items-center px-6 border-b border-slate-850">
+          <div class="flex items-center gap-2">
+            <div class="w-8 h-8 rounded-lg bg-gradient-to-tr from-indigo-500 via-purple-500 to-pink-500 flex items-center justify-center text-white font-bold text-lg shadow-md shadow-indigo-500/20">
+              A
+            </div>
+            <span class="font-bold text-white text-lg tracking-tight">AI Workspace</span>
+          </div>
+        </div>
+
+        <!-- Navigation Links -->
+        <nav class="p-4 space-y-1">
+          <%
+            nav_items = [
+              { label: "Dashboard", path: root_path, icon: "M3.75 6A2.25 2.25 0 0 1 6 3.75h2.25A2.25 2.25 0 0 1 10.5 6v2.25a2.25 2.25 0 0 1-2.25 2.25H6a2.25 2.25 0 0 1-2.25-2.25V6ZM3.75 15.75A2.25 2.25 0 0 1 6 13.5h2.25a2.25 2.25 0 0 1 2.25 2.25V18a2.25 2.25 0 0 1-2.25 2.25H6A2.25 2.25 0 0 1 3.75 18v-2.25ZM13.5 6a2.25 2.25 0 0 1 2.25-2.25H18A2.25 2.25 0 0 1 20.25 6v2.25A2.25 2.25 0 0 1 18 10.5h-2.25a2.25 2.25 0 0 1-2.25-2.25V6ZM13.5 15.75a2.25 2.25 0 0 1 2.25-2.25H18a2.25 2.25 0 0 1 2.25 2.25V18A2.25 2.25 0 0 1 18 20.25h-2.25A2.25 2.25 0 0 1 13.5 18v-2.25Z", active: controller_name == "dashboard" },
+              { label: "AI Chat", path: conversations_path, icon: "M8.625 12a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H8.25m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H12m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 0 1-2.555-.337A5.972 5.972 0 0 1 5.41 20.97a.75.75 0 0 1-1.074-.765 6 6 0 0 0 1.282-3.8A8.962 8.962 0 0 1 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25Z", active: %w[conversations].include?(controller_name) },
+              { label: "Email Generator", path: email_generator_path, icon: "M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75", active: controller_name == "email_generator" },
+              { label: "Summarizer", path: summarizer_path, icon: "M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5A3.375 3.375 0 0 0 10.125 2.25H3.75A2.25 2.25 0 0 0 1.5 4.5v15a2.25 2.25 0 0 0 2.25 2.25h12a2.25 2.25 0 0 0 2.25-2.25V18.75m3-4.5H16.5a2.25 2.25 0 0 1-2.25-2.25V9m4.5 5.25H9.75M9.75 18.75h6", active: controller_name == "summarizer" },
+              { label: "Settings", path: settings_path, icon: "M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 0 1 1.37.49l1.296 2.247a1.125 1.125 0 0 1-.26 1.43l-1.003.828c-.293.241-.438.613-.43.992a7.723 7.723 0 0 1 0 .255c-.008.378.137.75.43.991l1.004.829a1.125 1.125 0 0 1 .26 1.43l-1.297 2.247a1.125 1.125 0 0 1-1.37.491l-1.216-.456c-.356-.133-.751-.072-1.076.124a6.57 6.57 0 0 1-.22.128c-.331.183-.581.495-.644.869l-.213 1.28c-.09.543-.56.94-1.11.94h-2.594c-.55 0-1.02-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 0 1-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 0 1-1.369-.49l-1.297-2.247a1.125 1.125 0 0 1 .26-1.43l1.004-.829c.292-.24.437-.613.43-.992a6.932 6.932 0 0 1 0-.255c.007-.378-.138-.75-.43-.992l-1.004-.828a1.125 1.125 0 0 1-.26-1.43l1.297-2.247a1.125 1.125 0 0 1 1.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.087.22-.128.332-.183.582-.495.644-.869l.214-1.28Z", active: controller_name == "settings" }
+            ]
+          %>
+          <% nav_items.each do |item| %>
+            <%= link_to item[:path], class: "flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-all group #{item[:active] ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/10' : 'text-slate-400 hover:bg-slate-800 hover:text-white'}" do %>
+              <svg xmlns="http://www.w3.org/2500/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 shrink-0 transition-colors #{item[:active] ? 'text-white' : 'text-slate-400 group-hover:text-white'}">
+                <path stroke-linecap="round" stroke-linejoin="round" d="<%= item[:icon] %>" />
+              </svg>
+              <%= item[:label] %>
+            <% end %>
+          <% end %>
+        </nav>
+      </div>
+
+      <!-- Footer Branding / Quick stats -->
+      <div class="p-6 border-t border-slate-850 bg-slate-950/40">
+        <div class="flex items-center justify-between">
+          <div>
+            <div class="text-xs text-slate-500 font-semibold uppercase tracking-wider">Workspace Mode</div>
+            <div class="text-sm font-bold text-white flex items-center gap-1.5 mt-0.5">
+              <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+              Phase 4 Active
+            </div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Section -->
+    <div class="flex-1 flex flex-col min-w-0">
+      <!-- Top Application Header -->
+      <header class="h-16 border-b border-slate-200 bg-white flex items-center justify-between px-8 z-10 shrink-0">
+        <div>
+          <h1 class="text-xl font-bold text-slate-800 tracking-tight">
+            <%= yield :page_title rescue "Workspace" %>
+          </h1>
+        </div>
+        <div class="flex items-center gap-4">
+          <!-- Status Indicator -->
+          <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-indigo-50 text-indigo-700 border border-indigo-100 flex items-center gap-1.5">
+            <span class="w-1.5 h-1.5 rounded-full bg-indigo-500"></span>
+            Rails <%= Rails.version %>
+          </span>
+          <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-slate-100 text-slate-700 flex items-center gap-1.5">
+            Ruby <%= RUBY_VERSION %>
+          </span>
+        </div>
+      </header>
+
+      <!-- Flash Messages -->
+      <% if flash.any? %>
+        <div class="px-8 pt-4">
+          <% flash.each do |type, message| %>
+            <div class="px-4 py-3 rounded-lg text-sm font-medium <%= type == "notice" ? "bg-emerald-50 text-emerald-700 border border-emerald-200" : "bg-red-50 text-red-700 border border-red-200" %>">
+              <%= message %>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+
+      <!-- Main Workspace Scrollable Viewport -->
+      <main class="flex-1 overflow-y-auto p-8 <%= controller_name == "conversations" ? "p-0" : "" %>">
+        <%= yield %>
+      </main>
+    </div>
+  </body>
+</html>
