@@ -91,6 +91,82 @@ module AI
       raise APIError, "Unexpected error: #{e.message}"
     end
 
+    # Generate embeddings for text
+    # @param text [String] The text to embed
+    # @param model [String] The embedding model to use
+    # @return [Array<Float>] The embedding vector
+    def embed(text, model: nil)
+      start_time = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+      embedding_model = model || "text-embedding-3-small"
+
+      response = @openai_client.embeddings(
+        parameters: {
+          model: embedding_model,
+          input: text
+        }
+      )
+
+      duration = Process.clock_gettime(Process::CLOCK_MONOTONIC) - start_time
+      embedding = response.dig("data", 0, "embedding")
+      total_tokens = response.dig("usage", "total_tokens")
+
+      log_embedding_success(embedding_model, duration, total_tokens, embedding&.length)
+      embedding
+    rescue Faraday::TimeoutError => e
+      log_error("embedding_timeout")
+      raise TimeoutError, "Embedding request timed out: #{e.message}"
+    rescue Faraday::ConnectionFailed => e
+      log_error("embedding_network_error")
+      raise NetworkError, "Embedding connection failed: #{e.message}"
+    rescue Faraday::ClientError => e
+      handle_faraday_error(e)
+    rescue Faraday::ServerError => e
+      handle_faraday_error(e)
+    rescue OpenAI::Error => e
+      handle_openai_error(e)
+    rescue StandardError => e
+      log_error("embedding_unexpected_error")
+      raise APIError, "Embedding error: #{e.message}"
+    end
+
+    # Generate embeddings for multiple texts in batch
+    # @param texts [Array<String>] The texts to embed
+    # @param model [String] The embedding model to use
+    # @return [Array<Array<Float>>] Array of embedding vectors
+    def embed_batch(texts, model: nil)
+      start_time = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+      embedding_model = model || "text-embedding-3-small"
+
+      response = @openai_client.embeddings(
+        parameters: {
+          model: embedding_model,
+          input: texts
+        }
+      )
+
+      duration = Process.clock_gettime(Process::CLOCK_MONOTONIC) - start_time
+      embeddings = response.dig("data")&.sort_by { |d| d["index"] }&.map { |d| d["embedding"] }
+      total_tokens = response.dig("usage", "total_tokens")
+
+      log_embedding_success(embedding_model, duration, total_tokens, embeddings&.first&.length)
+      embeddings
+    rescue Faraday::TimeoutError => e
+      log_error("embedding_batch_timeout")
+      raise TimeoutError, "Embedding batch request timed out: #{e.message}"
+    rescue Faraday::ConnectionFailed => e
+      log_error("embedding_batch_network_error")
+      raise NetworkError, "Embedding batch connection failed: #{e.message}"
+    rescue Faraday::ClientError => e
+      handle_faraday_error(e)
+    rescue Faraday::ServerError => e
+      handle_faraday_error(e)
+    rescue OpenAI::Error => e
+      handle_openai_error(e)
+    rescue StandardError => e
+      log_error("embedding_batch_unexpected_error")
+      raise APIError, "Embedding batch error: #{e.message}"
+    end
+
     private
 
     def validate_config!
@@ -179,6 +255,10 @@ module AI
 
     def log_success(model, duration, tokens)
       Rails.logger.info("[AI::Client] Model=#{model} Duration=#{duration.round(3)}s Tokens=#{tokens}")
+    end
+
+    def log_embedding_success(model, duration, tokens, dimensions)
+      Rails.logger.info("[AI::Client] Embedding Model=#{model} Duration=#{duration.round(3)}s Tokens=#{tokens} Dimensions=#{dimensions}")
     end
   end
 end

@@ -341,4 +341,165 @@ RSpec.describe AI::Client do
       end
     end
   end
+
+  describe "#embed" do
+    let(:client) { described_class.new(configuration: config) }
+    let(:embedding_response) do
+      {
+        "data" => [
+          {
+            "embedding" => Array.new(1536) { rand(-1.0..1.0) },
+            "index" => 0,
+            "object" => "embedding"
+          }
+        ],
+        "model" => "text-embedding-3-small",
+        "object" => "list",
+        "usage" => {
+          "prompt_tokens" => 8,
+          "total_tokens" => 8
+        }
+      }
+    end
+
+    it "calls OpenAI embeddings API with correct parameters" do
+      expect(openai_instance).to receive(:embeddings).with(
+        parameters: {
+          model: "text-embedding-3-small",
+          input: "Hello world"
+        }
+      ).and_return(embedding_response)
+
+      client.embed("Hello world")
+    end
+
+    it "returns an array of floats" do
+      allow(openai_instance).to receive(:embeddings).and_return(embedding_response)
+
+      result = client.embed("Hello world")
+      expect(result).to be_an(Array)
+      expect(result).to all(be_a(Float))
+    end
+
+    it "returns 1536 dimensions for text-embedding-3-small" do
+      allow(openai_instance).to receive(:embeddings).and_return(embedding_response)
+
+      result = client.embed("Hello world")
+      expect(result.length).to eq(1536)
+    end
+
+    it "allows custom model" do
+      expect(openai_instance).to receive(:embeddings).with(
+        parameters: {
+          model: "text-embedding-3-large",
+          input: "Hello world"
+        }
+      ).and_return(embedding_response)
+
+      client.embed("Hello world", model: "text-embedding-3-large")
+    end
+
+    it "logs embedding success" do
+      allow(openai_instance).to receive(:embeddings).and_return(embedding_response)
+
+      expect(Rails.logger).to receive(:info).with(/\[AI::Client\] Embedding/)
+      client.embed("Hello world")
+    end
+
+    context "when API returns error" do
+      it "handles timeout errors" do
+        allow(openai_instance).to receive(:embeddings).and_raise(
+          Faraday::TimeoutError.new("timeout")
+        )
+
+        expect { client.embed("Hello") }.to raise_error(AI::TimeoutError, /timed out/)
+      end
+
+      it "handles connection errors" do
+        allow(openai_instance).to receive(:embeddings).and_raise(
+          Faraday::ConnectionFailed.new("connection failed")
+        )
+
+        expect { client.embed("Hello") }.to raise_error(AI::NetworkError, /Embedding connection failed/)
+      end
+
+      it "handles authentication errors" do
+        allow(openai_instance).to receive(:embeddings).and_raise(
+          Faraday::UnauthorizedError.new(status: 401, body: {"error" => {"message" => "Invalid API key"}})
+        )
+
+        expect { client.embed("Hello") }.to raise_error(AI::AuthenticationError, /Invalid API key/)
+      end
+
+      it "handles rate limit errors" do
+        allow(openai_instance).to receive(:embeddings).and_raise(
+          Faraday::TooManyRequestsError.new(status: 429, body: {"error" => {"message" => "Rate limit exceeded"}})
+        )
+
+        expect { client.embed("Hello") }.to raise_error(AI::RateLimitError, /Rate limit exceeded/)
+      end
+    end
+  end
+
+  describe "#embed_batch" do
+    let(:client) { described_class.new(configuration: config) }
+    let(:batch_embedding_response) do
+      {
+        "data" => [
+          {
+            "embedding" => Array.new(1536) { rand(-1.0..1.0) },
+            "index" => 0,
+            "object" => "embedding"
+          },
+          {
+            "embedding" => Array.new(1536) { rand(-1.0..1.0) },
+            "index" => 1,
+            "object" => "embedding"
+          }
+        ],
+        "model" => "text-embedding-3-small",
+        "object" => "list",
+        "usage" => {
+          "prompt_tokens" => 16,
+          "total_tokens" => 16
+        }
+      }
+    end
+
+    it "calls OpenAI embeddings API with multiple inputs" do
+      expect(openai_instance).to receive(:embeddings).with(
+        parameters: {
+          model: "text-embedding-3-small",
+          input: ["Hello", "World"]
+        }
+      ).and_return(batch_embedding_response)
+
+      client.embed_batch(["Hello", "World"])
+    end
+
+    it "returns array of embedding arrays" do
+      allow(openai_instance).to receive(:embeddings).and_return(batch_embedding_response)
+
+      result = client.embed_batch(["Hello", "World"])
+      expect(result).to be_an(Array)
+      expect(result.length).to eq(2)
+      expect(result[0]).to be_an(Array)
+      expect(result[1]).to be_an(Array)
+    end
+
+    it "returns embeddings in correct order" do
+      allow(openai_instance).to receive(:embeddings).and_return(batch_embedding_response)
+
+      result = client.embed_batch(["Hello", "World"])
+      expect(result[0]).to eq(batch_embedding_response["data"][0]["embedding"])
+      expect(result[1]).to eq(batch_embedding_response["data"][1]["embedding"])
+    end
+
+    it "logs batch embedding success" do
+      allow(openai_instance).to receive(:embeddings).and_return(batch_embedding_response)
+
+      expect(Rails.logger).to receive(:info).with(/\[AI::Client\] Embedding/)
+      client.embed_batch(["Hello", "World"])
+    end
+  end
 end
