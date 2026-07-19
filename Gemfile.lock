@@ -200,6 +200,7 @@ GEM
       racc
     pg (1.6.3-x86_64-darwin)
     pg (1.6.3-x86_64-linux)
+    pgvector (0.3.3)
     pp (0.6.4)
       prettyprint
     prettyprint (0.2.0)
@@ -391,6 +392,7 @@ DEPENDENCIES
   jbuilder
   kamal
   pg (~> 1.1)
+  pgvector (~> 0.3)
   propshaft
   puma (>= 5.0)
   rails (~> 8.0.1)
