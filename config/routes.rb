@@ -14,6 +14,6 @@ Rails.application.routes.draw do
     end
   end
   resource :email_generator, only: [ :show, :create ], controller: :email_generator
-  resource :summarizer, only: [ :show ], controller: :summarizer
+  resource :summarizer, only: [ :show, :create ], controller: :summarizer
   resource :settings, only: [ :show ], controller: :settings
 end

@@ -32,7 +32,7 @@ RSpec.describe "Routing and Placeholders", type: :request do
       get summarizer_path
       expect(response).to have_http_status(:success)
       expect(response.body).to include("Summarizer")
-      expect(response.body).to include("Scheduled for Phase 1")
+      expect(response.body).to include("Generate Summary")
     end
   end
 

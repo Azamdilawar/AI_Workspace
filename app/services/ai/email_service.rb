@@ -93,7 +93,6 @@ module AI
 
     def generate(tone:, email_type:, length:, context:, &block)
       messages = build_messages(tone, email_type, length, context)
-      debugger
 
       if block
         @client.stream_chat(messages, temperature: 0.2, &block)
