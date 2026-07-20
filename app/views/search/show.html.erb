@@ -1,0 +1,92 @@
+<% content_for :page_title, "Semantic Search" %>
+
+<!-- Header -->
+<div class="mb-8">
+  <div class="bg-gradient-to-r from-emerald-900 to-slate-900 rounded-2xl p-8 text-white relative overflow-hidden border border-slate-800 shadow-xl shadow-slate-900/10">
+    <div class="relative z-10 max-w-2xl">
+      <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-400/20 text-emerald-300 font-medium text-xs mb-4">
+        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+        Semantic Search (Phase 4)
+      </div>
+      <h2 class="text-3xl font-extrabold tracking-tight mb-2">Knowledge Search</h2>
+      <p class="text-slate-350 leading-relaxed text-sm">
+        Search your knowledge base using natural language. Find semantically similar content, not just keyword matches.
+      </p>
+    </div>
+    <div class="absolute right-0 bottom-0 opacity-10 blur-2xl w-64 h-64 bg-emerald-500 rounded-full translate-x-12 translate-y-12"></div>
+  </div>
+</div>
+
+<!-- Search Form -->
+<div class="bg-white rounded-xl border border-slate-200 p-6 mb-8">
+  <%= form_tag search_path, method: :get, class: "flex gap-4" do %>
+    <div class="flex-1">
+      <%= text_field_tag :query, @query,
+          placeholder: "Ask a question... (e.g., 'What is Ruby?')",
+          class: "w-full px-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition" %>
+    </div>
+    <%= submit_tag "Search", class: "px-6 py-3 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 font-semibold transition cursor-pointer" %>
+  <% end %>
+</div>
+
+<!-- Results -->
+<% if @query.present? %>
+  <div class="mb-4">
+    <h3 class="text-lg font-bold text-slate-800">
+      Results for "<span class="text-emerald-600"><%= @query %></span>"
+    </h3>
+    <p class="text-sm text-slate-500 mt-1">
+      <%= @results.is_a?(Array) ? @results.length : 0 %> result(s) found
+    </p>
+  </div>
+
+  <% if @results.is_a?(Hash) && @results[:error] %>
+    <!-- Error -->
+    <div class="bg-red-50 border border-red-200 rounded-xl p-6 text-red-700">
+      <p class="font-semibold">Search Error</p>
+      <p class="text-sm mt-1"><%= @results[:error] %></p>
+    </div>
+  <% elsif @results.is_a?(Array) && @results.empty? %>
+    <!-- No Results -->
+    <div class="bg-slate-50 border border-slate-200 rounded-xl p-8 text-center">
+      <p class="text-slate-500 text-lg">No results found</p>
+      <p class="text-slate-400 text-sm mt-2">Try a different query or add more knowledge documents</p>
+    </div>
+  <% elsif @results.is_a?(Array) %>
+    <!-- Result Cards -->
+    <div class="space-y-4">
+      <% @results.each_with_index do |result, index| %>
+        <div class="bg-white rounded-xl border border-slate-200 p-6 hover:border-emerald-300 hover:shadow-md transition-all">
+          <div class="flex items-start justify-between">
+            <div class="flex-1">
+              <div class="flex items-center gap-2 mb-2">
+                <span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-emerald-100 text-emerald-700 text-xs font-bold">
+                  <%= index + 1 %>
+                </span>
+                <span class="text-sm font-medium text-slate-500">
+                  From: <%= result[:knowledge_title] %>
+                </span>
+              </div>
+              <p class="text-slate-700 leading-relaxed">
+                <%= result[:content] %>
+              </p>
+            </div>
+          </div>
+          <div class="mt-4 flex items-center gap-4 text-xs text-slate-400">
+            <span>Chunk #<%= result[:position] %></span>
+            <span>ID: <%= result[:id] %></span>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+<% else %>
+  <!-- Initial State -->
+  <div class="bg-slate-50 border border-slate-200 rounded-xl p-8 text-center">
+    <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-emerald-100 flex items-center justify-center">
+      <span class="text-3xl">🔍</span>
+    </div>
+    <p class="text-slate-500 text-lg">Enter a search query above</p>
+    <p class="text-slate-400 text-sm mt-2">Search uses vector embeddings to find semantically similar content</p>
+  </div>
+<% end %>

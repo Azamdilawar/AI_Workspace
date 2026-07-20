@@ -20,7 +20,7 @@
 </div>
 
 <!-- Tools Grid -->
-<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-6">
   <!-- AI Chat Card -->
   <div class="bg-white rounded-xl border border-slate-200 p-6 flex flex-col justify-between hover:border-indigo-300 hover:shadow-md transition-all">
     <div>
@@ -36,6 +36,26 @@
       <span class="text-emerald-600 font-medium">Status: Active</span>
       <a href="<%= conversations_path %>" class="text-indigo-600 hover:text-indigo-800 font-semibold group flex items-center gap-1">
         Open Chat
+        <span class="transition-transform group-hover:translate-x-0.5">&rarr;</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- Semantic Search Card -->
+  <div class="bg-white rounded-xl border border-slate-200 p-6 flex flex-col justify-between hover:border-emerald-300 hover:shadow-md transition-all">
+    <div>
+      <div class="w-10 h-10 rounded-lg bg-emerald-50 flex items-center justify-center text-emerald-600 mb-4 font-bold text-lg">
+        🔍
+      </div>
+      <h3 class="text-lg font-bold text-slate-850 mb-1">Semantic Search</h3>
+      <p class="text-slate-500 text-sm leading-relaxed">
+        Search your knowledge base using natural language. Find similar content, not just keywords.
+      </p>
+    </div>
+    <div class="mt-6 flex items-center justify-between text-xs">
+      <span class="text-emerald-600 font-medium">Status: Active</span>
+      <a href="<%= search_path %>" class="text-emerald-600 hover:text-emerald-800 font-semibold group flex items-center gap-1">
+        Search
         <span class="transition-transform group-hover:translate-x-0.5">&rarr;</span>
       </a>
     </div>

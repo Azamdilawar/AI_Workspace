@@ -16,4 +16,5 @@ Rails.application.routes.draw do
   resource :email_generator, only: [ :show, :create ], controller: :email_generator
   resource :summarizer, only: [ :show, :create ], controller: :summarizer
   resource :settings, only: [ :show ], controller: :settings
+  get "search", to: "search#show", as: :search
 end
