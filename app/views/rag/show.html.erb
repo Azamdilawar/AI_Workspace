@@ -1,0 +1,100 @@
+<% content_for :page_title, "RAG - Ask Questions" %>
+
+<!-- Header -->
+<div class="mb-8">
+  <div class="bg-gradient-to-r from-blue-900 to-slate-900 rounded-2xl p-8 text-white relative overflow-hidden border border-slate-800 shadow-xl shadow-slate-900/10">
+    <div class="relative z-10 max-w-2xl">
+      <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-400/20 text-blue-300 font-medium text-xs mb-4">
+        <span class="w-1.5 h-1.5 rounded-full bg-blue-400"></span>
+        RAG - Retrieval-Augmented Generation
+      </div>
+      <h2 class="text-3xl font-extrabold tracking-tight mb-2">Ask Questions</h2>
+      <p class="text-slate-350 leading-relaxed text-sm">
+        Ask questions about your knowledge base. Answers are generated using AI with context from your documents.
+      </p>
+    </div>
+    <div class="absolute right-0 bottom-0 opacity-10 blur-2xl w-64 h-64 bg-blue-500 rounded-full translate-x-12 translate-y-12"></div>
+  </div>
+</div>
+
+<!-- Question Form -->
+<div class="bg-white rounded-xl border border-slate-200 p-6 mb-8">
+  <%= form_tag rag_path, method: :get, class: "flex gap-4" do %>
+    <div class="flex-1">
+      <%= text_field_tag :question, @question,
+          placeholder: "Ask a question... (e.g., 'What is Ruby?')",
+          class: "w-full px-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition" %>
+    </div>
+    <%= submit_tag "Ask", class: "px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-semibold transition cursor-pointer" %>
+  <% end %>
+</div>
+
+<!-- Results -->
+<% if @question.present? %>
+  <div class="mb-4">
+    <h3 class="text-lg font-bold text-slate-800">
+      Question: "<span class="text-blue-600"><%= @question %></span>"
+    </h3>
+  </div>
+
+  <% if @result.is_a?(Hash) && @result[:error] %>
+    <!-- Error -->
+    <div class="bg-red-50 border border-red-200 rounded-xl p-6 text-red-700">
+      <p class="font-semibold">Error</p>
+      <p class="text-sm mt-1"><%= @result[:error] %></p>
+    </div>
+  <% elsif @result.is_a?(Hash) && @result[:answer] %>
+    <!-- Answer Card -->
+    <div class="bg-white rounded-xl border border-slate-200 p-6 mb-6">
+      <div class="flex items-center gap-2 mb-4">
+        <div class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center">
+          <span class="text-blue-600 font-bold">AI</span>
+        </div>
+        <span class="font-semibold text-slate-800">Answer</span>
+      </div>
+      <div class="prose prose-sm max-w-none text-slate-700">
+        <%= simple_format(@result[:answer]) %>
+      </div>
+    </div>
+
+    <!-- Sources Card -->
+    <% if @result[:sources].present? %>
+      <div class="bg-slate-50 rounded-xl border border-slate-200 p-6 mb-6">
+        <h4 class="font-semibold text-slate-800 mb-3">Sources Used</h4>
+        <div class="space-y-2">
+          <% @result[:sources].each do |source| %>
+            <div class="flex items-start gap-3 text-sm">
+              <span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-blue-100 text-blue-700 text-xs font-bold flex-shrink-0">
+                <%= source[:number] %>
+              </span>
+              <div>
+                <span class="font-medium text-slate-700"><%= source[:title] %></span>
+                <span class="text-slate-400">— Chunk <%= source[:position] %></span>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+
+    <!-- Metadata Card -->
+    <% if @result[:metadata].present? %>
+      <div class="bg-white rounded-xl border border-slate-200 p-4">
+        <div class="flex items-center gap-4 text-xs text-slate-500">
+          <span>Model: <strong class="text-slate-700"><%= @result[:metadata][:model] %></strong></span>
+          <span>Chunks used: <strong class="text-slate-700"><%= @result[:metadata][:chunks_used] %></strong></span>
+          <span>Tokens: <strong class="text-slate-700"><%= @result[:metadata][:prompt_tokens] %></strong></span>
+        </div>
+      </div>
+    <% end %>
+  <% end %>
+<% else %>
+  <!-- Initial State -->
+  <div class="bg-slate-50 border border-slate-200 rounded-xl p-8 text-center">
+    <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-blue-100 flex items-center justify-center">
+      <span class="text-3xl">💡</span>
+    </div>
+    <p class="text-slate-500 text-lg">Enter a question above</p>
+    <p class="text-slate-400 text-sm mt-2">Answers are generated using AI with context from your knowledge base</p>
+  </div>
+<% end %>
