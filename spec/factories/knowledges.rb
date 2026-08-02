@@ -2,7 +2,7 @@ FactoryBot.define do
   factory :knowledge do
     title { "MyString" }
     content { "MyText" }
-    source_type { "MyString" }
+    source_type { "manual" }
     metadata { "" }
   end
 end

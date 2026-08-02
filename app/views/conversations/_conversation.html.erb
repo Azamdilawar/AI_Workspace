@@ -1,11 +1,11 @@
 <%= link_to conversation_path(conversation),
       class: "flex items-center justify-between px-3 py-2.5 rounded-lg text-sm transition-all group " \
-             "#{conversation == @conversation ? 'bg-indigo-50 text-indigo-700' : 'text-slate-600 hover:bg-slate-100 hover:text-slate-800'}" do %>
+             "#{conversation == @conversation ? 'bg-blue-50 text-blue-900' : 'text-black hover:bg-slate-100 hover:text-black'}" do %>
   <span class="truncate font-medium"><%= conversation.title %></span>
   <% if conversation == @conversation %>
     <%= button_to conversation_path(conversation),
           method: :delete,
-          class: "shrink-0 p-1 rounded text-slate-400 hover:text-red-500 hover:bg-red-50 opacity-0 group-hover:opacity-100 transition-opacity",
+          class: "shrink-0 p-1 rounded text-black hover:text-red-500 hover:bg-red-50 opacity-0 group-hover:opacity-100 transition-opacity",
           data: { turbo_confirm: "Delete this conversation?" },
           title: "Delete" do %>
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">

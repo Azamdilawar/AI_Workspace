@@ -9,8 +9,8 @@
     <!-- Left Side: Form -->
     <div class="lg:col-span-2 space-y-6">
       <div>
-        <h2 class="text-lg font-bold text-slate-800 tracking-tight">Compose</h2>
-        <p class="text-sm text-slate-500 mt-0.5">Configure your email and generate with AI.</p>
+        <h2 class="text-lg font-bold text-black tracking-tight">Compose</h2>
+        <p class="text-sm text-black mt-0.5">Configure your email and generate with AI.</p>
       </div>
 
       <%= form_with url: email_generator_path, method: :post,
@@ -19,7 +19,7 @@
 
         <!-- Tone -->
         <div>
-          <%= f.label :tone, "Tone", class: "block text-sm font-semibold text-slate-700 mb-1.5" %>
+          <%= f.label :tone, "Tone", class: "block text-sm font-semibold text-black mb-1.5" %>
           <%= f.select :tone,
                 options_for_select([
                   ["Professional", "professional"],
@@ -27,12 +27,12 @@
                   ["Formal", "formal"]
                 ], "professional"),
                 {},
-                class: "w-full px-3 py-2.5 bg-white border border-slate-200 rounded-lg text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500" %>
+                class: "w-full px-3 py-2.5 bg-white border border-slate-200 rounded-lg text-sm text-black focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500" %>
         </div>
 
         <!-- Email Type -->
         <div>
-          <%= f.label :email_type, "Email Type", class: "block text-sm font-semibold text-slate-700 mb-1.5" %>
+          <%= f.label :email_type, "Email Type", class: "block text-sm font-semibold text-black mb-1.5" %>
           <%= f.select :email_type,
                 options_for_select([
                   ["Outreach", "outbound"],
@@ -44,12 +44,12 @@
                   ["Announcement", "announcement"]
                 ], "outbound"),
                 {},
-                class: "w-full px-3 py-2.5 bg-white border border-slate-200 rounded-lg text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500" %>
+                class: "w-full px-3 py-2.5 bg-white border border-slate-200 rounded-lg text-sm text-black focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500" %>
         </div>
 
         <!-- Length -->
         <div>
-          <%= f.label :length, "Length", class: "block text-sm font-semibold text-slate-700 mb-1.5" %>
+          <%= f.label :length, "Length", class: "block text-sm font-semibold text-black mb-1.5" %>
           <%= f.select :length,
                 options_for_select([
                   ["Short", "short"],
@@ -57,39 +57,39 @@
                   ["Long", "long"]
                 ], "medium"),
                 {},
-                class: "w-full px-3 py-2.5 bg-white border border-slate-200 rounded-lg text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500" %>
+                class: "w-full px-3 py-2.5 bg-white border border-slate-200 rounded-lg text-sm text-black focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500" %>
         </div>
 
         <!-- Context -->
         <div>
-          <%= f.label :context, "Context / Details", class: "block text-sm font-semibold text-slate-700 mb-1.5" %>
+          <%= f.label :context, "Context / Details", class: "block text-sm font-semibold text-black mb-1.5" %>
           <%= f.text_area :context,
                 placeholder: "Describe what you want the email to say. Include recipient details, purpose, key points, etc.",
                 rows: 6,
                 data: { email_generator_target: "context", controller: "autogrow" },
-                class: "w-full px-4 py-3 bg-white border border-slate-200 rounded-lg text-sm text-slate-700 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 resize-none" %>
+                class: "w-full px-4 py-3 bg-white border border-slate-200 rounded-lg text-sm text-black placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 resize-none" %>
         </div>
 
         <!-- Submit -->
         <%= f.submit "Generate Email",
               data: { email_generator_target: "submit" },
-              class: "w-full px-5 py-3 bg-indigo-600 text-white rounded-xl text-sm font-semibold hover:bg-indigo-700 transition-colors shadow-sm disabled:opacity-50 disabled:cursor-not-allowed" %>
+              class: "w-full px-5 py-3 bg-blue-100 text-blue-900 border border-blue-400 rounded-xl text-sm font-semibold hover:bg-blue-200 transition-colors shadow-sm disabled:opacity-50 disabled:cursor-not-allowed" %>
       <% end %>
     </div>
 
     <!-- Right Side: Output -->
     <div class="lg:col-span-3 space-y-6">
       <div>
-        <h2 class="text-lg font-bold text-slate-800 tracking-tight">Generated Email</h2>
-        <p class="text-sm text-slate-500 mt-0.5">Your AI-generated email will appear here.</p>
+        <h2 class="text-lg font-bold text-black tracking-tight">Generated Email</h2>
+        <p class="text-sm text-black mt-0.5">Your AI-generated email will appear here.</p>
       </div>
 
       <!-- Loading Indicator -->
       <div data-email-generator-target="loading" class="hidden">
         <div class="bg-white border border-slate-200 rounded-xl p-8 shadow-sm">
           <div class="flex items-center gap-3 mb-4">
-            <span class="w-2.5 h-2.5 bg-indigo-500 rounded-full animate-pulse"></span>
-            <span class="text-sm font-medium text-slate-600">Generating email...</span>
+            <span class="w-2.5 h-2.5 bg-blue-500 rounded-full animate-pulse"></span>
+            <span class="text-sm font-medium text-black">Generating email...</span>
           </div>
           <div class="space-y-3">
             <div class="h-4 bg-slate-100 rounded-full w-3/4 animate-pulse"></div>
@@ -121,23 +121,23 @@
                     data-controller="autogrow"
                     placeholder="Your generated email will appear here..."
                     spellcheck="true"
-                    class="w-full min-h-[300px] px-5 py-4 bg-white text-sm text-slate-700 font-mono leading-relaxed focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500/20 focus:border-indigo-500 resize-y border-0"></textarea>
+                    class="w-full min-h-[300px] px-5 py-4 bg-white text-sm text-black font-mono leading-relaxed focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500/20 focus:border-blue-500 resize-y border-0"></textarea>
 
           <!-- Controls -->
           <div data-email-generator-target="controls" class="hidden border-t border-slate-100 px-5 py-3 bg-slate-50 flex items-center justify-between">
-            <span class="text-xs text-slate-400">
-              <span class="font-medium text-slate-500">Tip:</span> Edit the email directly in the text area above.
+            <span class="text-xs text-black">
+              <span class="font-medium text-black">Tip:</span> Edit the email directly in the text area above.
             </span>
             <div class="flex items-center gap-2">
               <button data-action="click->email-generator#regenerate"
-                    class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-slate-600 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 hover:text-indigo-600 transition-colors">
+                    class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-black bg-white border border-slate-200 rounded-lg hover:bg-slate-50 hover:text-blue-600 transition-colors">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-3.5 h-3.5">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182" />
                 </svg>
                 Regenerate
               </button>
               <button data-action="click->email-generator#copy"
-                    class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-slate-600 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 hover:text-indigo-600 transition-colors">
+                    class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-black bg-white border border-slate-200 rounded-lg hover:bg-slate-50 hover:text-blue-600 transition-colors">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-3.5 h-3.5">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M15.666 3.888A2.25 2.25 0 0013.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 01-.75.75H9a.75.75 0 01-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.646.049 1.288.11 1.927.184 1.1.128 1.907 1.077 1.907 2.185V19.5a2.25 2.25 0 01-2.25 2.25H6.75A2.25 2.25 0 014.5 19.5V6.257c0-1.108.806-2.057 1.907-2.185a48.208 48.208 0 011.927-.184" />
                 </svg>

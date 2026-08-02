@@ -1,6 +1,6 @@
 module Rag
   class RagService
-    def initialize(client: nil, search_limit: 5, system_prompt: nil, response_format: :footer)
+    def initialize(client: nil, search_limit: 5, system_prompt: nil, response_format: :none)
       @client = client || AI::Client.new
       @search_limit = search_limit
       @prompt_builder = PromptBuilder.new(system_prompt: system_prompt)

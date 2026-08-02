@@ -18,4 +18,5 @@ Rails.application.routes.draw do
   resource :settings, only: [ :show ], controller: :settings
   get "search", to: "search#show", as: :search
   get "rag", to: "rag#show", as: :rag
+  resources :knowledge, only: [:index, :show, :new, :create, :destroy]
 end
