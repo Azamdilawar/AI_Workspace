@@ -25,6 +25,9 @@ gem "dotenv-rails", groups: [ :development, :test ]
 # OpenAI API Ruby SDK wrapper
 gem "ruby-openai"
 
+# PostgreSQL vector similarity search (pgvector)
+gem "pgvector", "~> 0.3"
+
 # Markdown rendering for AI assistant responses
 gem "redcarpet"
 gem "rouge"

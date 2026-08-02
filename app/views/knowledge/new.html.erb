@@ -1,0 +1,82 @@
+<% content_for :page_title, "Upload Document" %>
+
+<!-- Header -->
+<div class="mb-8">
+  <div class="bg-blue-900 rounded-2xl p-8 relative overflow-hidden border border-blue-800 shadow-xl shadow-blue-900/10">
+    <div class="relative z-10 max-w-2xl">
+      <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-400/20 text-blue-200 font-medium text-xs mb-4">
+        <span class="w-1.5 h-1.5 rounded-full bg-blue-400"></span>
+        Knowledge Base
+      </div>
+      <h2 class="text-3xl font-extrabold tracking-tight mb-2 text-blue-200">Upload Document</h2>
+      <p class="text-blue-200 leading-relaxed text-sm">
+        Add a new document to your knowledge base. It will be automatically chunked and embedded.
+      </p>
+    </div>
+    <div class="absolute right-0 bottom-0 opacity-10 blur-2xl w-64 h-64 bg-blue-500 rounded-full translate-x-12 translate-y-12"></div>
+  </div>
+</div>
+
+<!-- Actions -->
+<div class="mb-6">
+  <%= link_to "Back to Documents", knowledge_index_path, class: "px-4 py-2 text-blue-600 hover:text-blue-800 font-semibold transition" %>
+</div>
+
+<!-- Form -->
+<div class="bg-white rounded-xl border border-slate-200 p-6">
+  <%= form_with(model: @knowledge, url: knowledge_index_path, local: true) do |form| %>
+    <% if @knowledge.errors.any? %>
+      <div class="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
+        <h4 class="font-semibold text-red-800 mb-2"><%= pluralize(@knowledge.errors.count, "error") %> prohibited this document from being saved:</h4>
+        <ul class="list-disc list-inside text-sm text-red-700">
+          <% @knowledge.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <!-- Title -->
+    <div class="mb-6">
+      <%= form.label :title, class: "block text-sm font-medium text-blue-900 mb-2" %>
+      <%= form.text_field :title, class: "w-full px-4 py-3 rounded-lg border border-blue-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition text-black", placeholder: "Document title" %>
+    </div>
+
+    <!-- File Upload -->
+    <div class="mb-6">
+      <%= form.label :file, "Upload File (optional)", class: "block text-sm font-medium text-blue-900 mb-2" %>
+      <div class="flex items-center justify-center w-full">
+        <label class="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-blue-300 rounded-lg cursor-pointer hover:border-blue-400 transition">
+          <div class="flex flex-col items-center justify-center pt-5 pb-6">
+            <span class="text-3xl mb-2">📄</span>
+            <p class="text-sm text-black">Click to upload or drag and drop</p>
+            <p class="text-xs text-blue-900 mt-1">TXT, MD (max 10MB)</p>
+          </div>
+          <%= form.file_field :file, class: "hidden", accept: ".txt,.md", direct_upload: false %>
+        </label>
+      </div>
+    </div>
+
+    <!-- Divider -->
+    <div class="relative my-6">
+      <div class="absolute inset-0 flex items-center">
+        <div class="w-full border-t border-slate-200"></div>
+      </div>
+      <div class="relative flex justify-center text-sm">
+        <span class="px-2 bg-white text-blue-900">or paste content directly</span>
+      </div>
+    </div>
+
+    <!-- Content -->
+    <div class="mb-6">
+      <%= form.label :content, "Content (if not uploading file)", class: "block text-sm font-medium text-blue-900 mb-2" %>
+      <%= form.text_area :content, rows: 10, class: "w-full px-4 py-3 rounded-lg border border-blue-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition font-mono text-sm text-black", placeholder: "Paste your document content here..." %>
+    </div>
+
+    <!-- Submit -->
+    <div class="flex items-center gap-4">
+      <%= form.submit "Upload & Process", class: "px-6 py-3 bg-blue-100 text-blue-900 border border-blue-400 rounded-lg hover:bg-blue-200 font-semibold transition cursor-pointer" %>
+      <%= link_to "Cancel", knowledge_index_path, class: "px-6 py-3 text-blue-600 hover:text-blue-800 font-semibold transition" %>
+    </div>
+  <% end %>
+</div>

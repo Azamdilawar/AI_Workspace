@@ -1,0 +1,69 @@
+<% content_for :page_title, @knowledge.title %>
+
+<!-- Header -->
+<div class="mb-8">
+  <div class="bg-blue-900 rounded-2xl p-8 relative overflow-hidden border border-blue-800 shadow-xl shadow-blue-900/10">
+    <div class="relative z-10 max-w-2xl">
+      <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-400/20 text-blue-200 font-medium text-xs mb-4">
+        <span class="w-1.5 h-1.5 rounded-full bg-blue-400"></span>
+        Knowledge Base
+      </div>
+      <h2 class="text-3xl font-extrabold tracking-tight mb-2 text-blue-200"><%= @knowledge.title %></h2>
+      <p class="text-blue-200 leading-relaxed text-sm">
+        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
+          <%= case @knowledge.source_type
+              when 'manual' then 'bg-blue-200 text-blue-900'
+              when 'upload' then 'bg-green-200 text-green-900'
+              when 'url' then 'bg-purple-200 text-purple-900'
+              end %>">
+          <%= @knowledge.source_type.capitalize %>
+        </span>
+        Created <%= @knowledge.created_at.strftime("%b %d, %Y at %I:%M %p") %>
+      </p>
+    </div>
+    <div class="absolute right-0 bottom-0 opacity-10 blur-2xl w-64 h-64 bg-blue-500 rounded-full translate-x-12 translate-y-12"></div>
+  </div>
+</div>
+
+<!-- Actions -->
+<div class="mb-6 flex items-center gap-4">
+  <%= link_to "Back to Documents", knowledge_index_path, class: "px-4 py-2 text-blue-600 hover:text-blue-800 font-semibold transition" %>
+  <%= button_to "Delete", knowledge_path(@knowledge), method: :delete, class: "px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 font-semibold transition", data: { turbo_confirm: "Are you sure?" } %>
+</div>
+
+<!-- Content -->
+<div class="bg-white rounded-xl border border-slate-200 p-6 mb-6">
+  <h3 class="font-semibold text-black mb-4">Content</h3>
+  <div class="prose prose-sm max-w-none text-black">
+    <%= simple_format(@knowledge.content) %>
+  </div>
+</div>
+
+<!-- Chunks -->
+<div class="bg-white rounded-xl border border-slate-200 p-6">
+  <h3 class="font-semibold text-black mb-4">
+    Chunks
+    <span class="text-sm font-normal text-black">(<%= @knowledge.knowledge_chunks.count %> total)</span>
+  </h3>
+
+  <% if @knowledge.knowledge_chunks.any? %>
+    <div class="space-y-4">
+      <% @knowledge.knowledge_chunks.order(:position).each do |chunk| %>
+        <div class="border border-slate-200 rounded-lg p-4">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-sm font-medium text-black">Chunk #<%= chunk.position %></span>
+            <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium
+              <%= chunk.embedding.present? ? 'bg-green-100 text-green-900' : 'bg-yellow-100 text-yellow-900' %>">
+              <%= chunk.embedding.present? ? 'Embedded' : 'Pending' %>
+            </span>
+          </div>
+          <p class="text-sm text-black">
+            <%= truncate(chunk.content, length: 300) %>
+          </p>
+        </div>
+      <% end %>
+    </div>
+  <% else %>
+    <p class="text-black text-sm">No chunks yet. Document may still be processing.</p>
+  <% end %>
+</div>
